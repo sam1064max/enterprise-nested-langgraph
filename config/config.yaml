@@ -1,0 +1,67 @@
+llm:
+  provider: openai
+  model: gpt-4.1
+  temperature: 0.2
+  max_tokens: 2000
+  request_timeout_seconds: 60
+  max_retries: 3
+
+research:
+  max_steps: 5
+  dedupe_results: true
+  planner_instructions: |
+    Decompose the user objective into the smallest number of independent
+    research tasks. Avoid redundant tasks. Prefer concrete, atomic
+    questions over vague ones.
+
+analytics:
+  calculations_enabled: true
+  sql_enabled: true
+  safe_eval: true
+  default_currency: USD
+
+reporting:
+  review_enabled: true
+  max_review_passes: 2
+  writer_instructions: |
+    Produce a structured executive report with: Executive Summary,
+    Findings, Analytics, Recommendations, and Appendix. Be concise.
+
+guardrails:
+  input:
+    enabled: true
+    max_query_length: 4000
+    block_patterns:
+      - "ignore (all|previous|prior) instructions"
+      - "reveal (your|the) (system|hidden) prompt"
+      - "show (your|the) (system|hidden) instructions"
+      - "forget (all|your) (rules|instructions)"
+      - "disregard (all|previous) (rules|instructions)"
+      - "act as (an? )?(unrestricted|jailbroken|developer) mode"
+      - "what is your (system|hidden) prompt"
+  output:
+    enabled: true
+    redact_patterns:
+      - "api[_-]?key"
+      - "secret"
+      - "password"
+      - "token"
+      - "traceback"
+      - "openai_api_key"
+      - "sk-[a-zA-Z0-9]{16,}"
+
+observability:
+  langsmith_enabled: true
+  langchain_tracing_v2: true
+  log_state_transitions: true
+
+logging:
+  level: INFO
+  format: json
+  include_timestamp: true
+  include_request_id: true
+
+app:
+  name: enterprise-nested-langgraph
+  version: 0.1.0
+  environment: development
