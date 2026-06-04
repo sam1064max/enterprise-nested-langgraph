@@ -10,11 +10,10 @@ validate values written into the state via helper functions.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Annotated, Any, TypedDict
+from typing import Annotated, Any, TypedDict
 from uuid import uuid4
 
-if TYPE_CHECKING:
-    from models.schemas import AnalyticsResult, ResearchFinding, ResearchTask
+from models.schemas import AnalyticsResult, ResearchFinding, ResearchTask  # noqa: TC001
 
 
 def _append(left: list[Any], right: Any) -> list[Any]:  # noqa: ANN401
@@ -29,11 +28,30 @@ def _append(left: list[Any], right: Any) -> list[Any]:  # noqa: ANN401
     return [*left, right]
 
 
+_APPEND_METADATA_KEYS = frozenset({"subgraph_timings", "state_transitions"})
+
+
 def _merge_metadata(left: dict[str, Any], right: dict[str, Any] | None) -> dict[str, Any]:
-    """Reducer that merges metadata dicts shallowly."""
+    """Reducer that merges metadata dicts shallowly.
+
+    For list-valued keys declared in :data:`_APPEND_METADATA_KEYS`
+    (e.g. ``subgraph_timings`` and ``state_transitions``), values are
+    appended to the existing list. All other keys are overwritten with
+    the right-hand value.
+    """
     if not right:
         return left
-    return {**left, **right}
+    merged: dict[str, Any] = {**left}
+    for key, value in right.items():
+        if key in _APPEND_METADATA_KEYS and isinstance(value, list):
+            existing = merged.get(key, [])
+            if isinstance(existing, list):
+                merged[key] = [*existing, *value]
+            else:
+                merged[key] = value
+        else:
+            merged[key] = value
+    return merged
 
 
 class GraphState(TypedDict, total=False):
