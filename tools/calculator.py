@@ -71,7 +71,7 @@ def safe_eval(expression: str, variables: Mapping[str, float] | None = None) -> 
 
 def _evaluate(node: ast.AST, variables: dict[str, float]) -> float:
     if isinstance(node, ast.Constant):
-        if isinstance(node.value, (int, float)):
+        if isinstance(node.value, (int | float)):
             return float(node.value)
         raise CalculatorError(f"unsupported constant: {node.value!r}")
 

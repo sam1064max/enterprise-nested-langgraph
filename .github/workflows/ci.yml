@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install ruff
-        run: pip install ruff==0.5.7
+        run: pip install ruff==0.8.0
       - name: Run ruff
         run: ruff check .
 
