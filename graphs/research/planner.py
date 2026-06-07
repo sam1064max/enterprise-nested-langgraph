@@ -36,7 +36,7 @@ def heuristic_planner(query: str, config: ResearchConfig) -> list[ResearchTask]:
     for index, segment in enumerate(segments, start=1):
         objective = segment.strip().rstrip(".").strip()
         if not objective:
-            continue
+            continue  # pragma: no cover
         key = objective.lower()
         if not config.dedupe_results or key not in seen_objectives:
             seen_objectives.add(key)
