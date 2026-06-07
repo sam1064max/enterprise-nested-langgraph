@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: enterprise-nested-langgraph:latest
+    container_name: enterprise-langgraph
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "from app import run; run('healthcheck')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - langgraph-net
+
+networks:
+  langgraph-net:
+    driver: bridge
