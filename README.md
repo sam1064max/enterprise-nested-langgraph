@@ -3,6 +3,13 @@
 Production-grade, multi-agent research and analytics system built with
 **LangGraph** and a hierarchical (nested) graph architecture.
 
+[![Tests](https://img.shields.io/badge/tests-140%20passed-brightgreen)](tests/)
+[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](tests/)
+[![Ruff](https://img.shields.io/badge/ruff-clean-brightgreen)](pyproject.toml)
+[![Mypy](https://img.shields.io/badge/mypy-clean-brightgreen)](pyproject.toml)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 This project demonstrates how to compose **parent graphs**
 (Supervisor) and **child subgraphs** (Research, Analytics, Reporting)
 into a single, strongly-typed, observable, and testable AI system.
