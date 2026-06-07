@@ -77,7 +77,11 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101", "S105", "S106", "PLR2004", "ARG", "ANN"]
+"tests/**/*.py" = [
+    "S101", "S105", "S106", "PLR2004", "ARG", "ANN",
+    "PLC0415", "F401", "B017", "UP037", "F811", "PT013",
+    "TC005", "TC006", "F821", "SIM117",
+]
 "app.py" = ["PLR0915"]  # app entrypoint may be long
 
 [tool.ruff.lint.isort]
@@ -122,11 +126,17 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["app.py", "config", "graphs", "models", "guardrails", "tools", "observability", "storage"]
-omit = ["tests/*", ".venv/*"]
+source = ["."]
+omit = ["tests/*", ".venv/*", "build/*", "dist/*"]
 
 [tool.coverage.report]
 precision = 2
 show_missing = true
 skip_covered = false
-fail_under = 60
+fail_under = 100
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

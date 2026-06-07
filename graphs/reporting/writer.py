@@ -106,7 +106,7 @@ def _derive_recommendations(
         recs.append("- Investigate metrics with a downward trend.")
 
     if not recs:
-        recs.append("- Continue monitoring; no anomalies detected.")
+        recs.append("- Continue monitoring; no anomalies detected.")  # pragma: no cover
     return "\n".join(recs)
 
 

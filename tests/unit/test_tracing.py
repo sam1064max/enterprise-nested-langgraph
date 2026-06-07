@@ -6,6 +6,7 @@ import os
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
+import pytest
 import structlog
 
 from observability.tracing import (
@@ -16,7 +17,24 @@ from observability.tracing import (
 )
 
 if TYPE_CHECKING:
-    from pytest import MonkeyPatch  # noqa: PT013
+    from pytest import MonkeyPatch
+
+_LANGSMITH_KEYS = (
+    "LANGCHAIN_TRACING_V2",
+    "LANGCHAIN_API_KEY",
+    "LANGCHAIN_PROJECT",
+    "LANGCHAIN_ENDPOINT",
+    "LANGSMITH_API_KEY",
+    "LANGSMITH_TRACING",
+    "LANGSMITH_ENDPOINT",
+)
+
+
+@pytest.fixture(autouse=True)
+def _clean_langsmith_env(monkeypatch: "MonkeyPatch") -> None:
+    """Make sure each test starts with a clean LangSmith environment."""
+    for key in _LANGSMITH_KEYS:
+        monkeypatch.delenv(key, raising=False)
 
 
 def test_generate_request_id_has_prefix() -> None:
@@ -46,8 +64,7 @@ def test_configure_langsmith_disabled_is_noop() -> None:
     assert os.environ.get("LANGCHAIN_TRACING_V2") != "true"
 
 
-def test_configure_langsmith_no_api_key_warns(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.delenv("LANGSMITH_API_KEY", raising=False)
+def test_configure_langsmith_no_api_key_warns() -> None:
     settings = MagicMock()
     settings.observability.langsmith_enabled = True
     settings.observability.langchain_tracing_v2 = True
@@ -69,8 +86,8 @@ def test_configure_langsmith_with_api_key_enables_tracing() -> None:
     assert os.environ.get("LANGCHAIN_ENDPOINT") == "https://api.smith.langchain.com"
 
 
-def test_configure_langsmith_respects_existing_env(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setenv("LANGCHAIN_PROJECT", "preexisting-project")
+def test_configure_langsmith_respects_existing_env() -> None:
+    os.environ["LANGCHAIN_PROJECT"] = "preexisting-project"
     settings = MagicMock()
     settings.observability.langsmith_enabled = True
     settings.observability.langchain_tracing_v2 = False
@@ -81,8 +98,8 @@ def test_configure_langsmith_respects_existing_env(monkeypatch: MonkeyPatch) -> 
     assert os.environ.get("LANGCHAIN_PROJECT") == "preexisting-project"
 
 
-def test_configure_langsmith_env_var_fallback(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setenv("LANGSMITH_API_KEY", "lsv2_from_env")
+def test_configure_langsmith_env_var_fallback() -> None:
+    os.environ["LANGSMITH_API_KEY"] = "lsv2_from_env"
     settings = MagicMock()
     settings.observability.langsmith_enabled = True
     settings.observability.langchain_tracing_v2 = True
