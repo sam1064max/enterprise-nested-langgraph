@@ -23,10 +23,6 @@ from graphs.supervisor.graph import _finalize
 from models.schemas import AnalyticsResult
 from models.state import GraphState, _merge_metadata
 
-if TYPE_CHECKING:
-    pass
-
-
 # ---------------------------------------------------------------------------
 # config/settings.py:164  (yaml_path does not exist)
 # ---------------------------------------------------------------------------

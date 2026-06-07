@@ -28,7 +28,7 @@ dev = [
     "pytest-cov>=5.0.0",
     "pytest-mock>=3.12.0",
     "pytest-asyncio>=0.23.0",
-    "ruff>=0.5.0",
+    "ruff>=0.7.0",
     "mypy>=1.10.0",
     "types-PyYAML>=6.0.12",
     "coverage>=7.5.0",
@@ -72,15 +72,13 @@ select = [
 ignore = [
     "S101",  # allow assert in tests
     "PLR0913",  # allow many args for config
-    "ANN101",  # self/cls annotations are redundant
-    "ANN102",  # cls in classmethods
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "S101", "S105", "S106", "PLR2004", "ARG", "ANN",
     "PLC0415", "F401", "B017", "UP037", "F811", "PT013",
-    "TC005", "TC006", "F821", "SIM117",
+    "F821", "SIM117",
 ]
 "app.py" = ["PLR0915"]  # app entrypoint may be long
 

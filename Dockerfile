@@ -25,8 +25,8 @@ COPY observability ./observability
 COPY tools ./tools
 COPY storage ./storage
 
-RUN uv export --format requirements-txt --no-hashes --no-dev -o requirements-prod.txt \
-    && uv export --format requirements-txt --no-hashes -o requirements-all.txt
+RUN uv export --format requirements-txt --no-hashes --no-dev --no-install-project -o requirements-prod.txt \
+    && uv export --format requirements-txt --no-hashes --no-install-project -o requirements-all.txt
 
 # ---- Stage 2: lean runtime image ----
 FROM python:3.12-slim AS runtime
